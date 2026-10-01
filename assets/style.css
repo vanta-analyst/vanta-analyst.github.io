@@ -253,3 +253,5 @@ table.scale td:last-child{text-align:right}
 footer{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-direction:column;gap:8px;color:var(--muted);font-size:12.5px}
 footer p{max-width:72ch}
 footer .big{color:var(--body);font-size:14px}
+
+[hidden]{display:none !important}
