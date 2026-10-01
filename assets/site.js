@@ -60,6 +60,7 @@
 
   // sortable tables: click a header; numbers sort high→low first, text A→Z
   document.querySelectorAll('table.sortable').forEach(t => {
+    if (!t.tHead || !t.tBodies[0]) return;
     const ths = [...t.tHead.rows[0].cells], body = t.tBodies[0];
     ths.forEach((th, i) => {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'th-btn';
