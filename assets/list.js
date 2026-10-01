@@ -49,6 +49,7 @@
     });
     if (!matched) ol.append(empty); else empty.remove();
     $('count').textContent = matched === total ? `${total} companies` : `${matched} of ${total} companies`;
+    const reset = $('reset'); if (reset) reset.hidden = !(q || ind || ctry || band !== 'all' || sort !== 'score');
     if (more) { more.hidden = matched <= shown; more.textContent = `Show ${Math.min(PAGE, matched - shown)} more`; }
     const u = new URLSearchParams();
     if (q) u.set('q', q); if (ind) u.set('ind', ind); if (ctry) u.set('country', ctry);
@@ -60,5 +61,11 @@
   ['ind', 'country', 'sort'].forEach(id => $(id).addEventListener('change', () => render()));
   segBtns.forEach(b => b.addEventListener('click', () => { band = b.dataset.band; render(); }));
   if (more) more.addEventListener('click', () => { limit += PAGE; render(true); });
+  if ($('reset')) $('reset').addEventListener('click', () => {
+    $('q').value = ''; $('ind').value = ''; $('country').value = ''; $('sort').value = 'score'; band = 'all'; render();
+  });
   render();
+  // on narrow screens the band row scrolls sideways: bring the chosen band into view
+  const on = segBtns.find(b => b.dataset.band === band), seg = $('band');
+  if (on && seg && seg.scrollWidth > seg.clientWidth) seg.scrollLeft = on.offsetLeft - seg.offsetLeft - 16;
 })();
