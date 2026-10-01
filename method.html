@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How Vanta scores stocks &#183; model 1.2</title>
+<title>How Vanta scores stocks &#183; model 1.3</title>
 <meta name="description" content="Every stock starts at 100 and loses points in three steps: business, price and cracks. The full Vanta method, scales and guards.">
-<meta property="og:title" content="How Vanta scores stocks &#183; model 1.2">
+<meta property="og:title" content="How Vanta scores stocks &#183; model 1.3">
 <meta property="og:description" content="Every stock starts at 100 and loses points in three steps: business, price and cracks. The full Vanta method, scales and guards.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://vanta-analyst.github.io/method.html">
@@ -22,9 +22,9 @@
 <div class="wrap">
 <p class="crumbs"><a href="index.html">All scores</a> · Method</p>
 <header class="hero">
-  <span class="label">The Vanta method · model 1.2</span>
+  <span class="label">The Vanta method · model 1.3</span>
   <h1>Every stock starts at <em>100</em>. Then it has to earn it.</h1>
-  <p class="lede">Vanta is a critical scoring framework. Instead of hunting for reasons to like a stock, it looks for reasons to take points away, and only gives points back for strengths that are documented. 210 stocks are scored so far. No stock has reached 100.</p>
+  <p class="lede">Vanta is a critical scoring framework. Instead of hunting for reasons to like a stock, it looks for reasons to take points away, and only gives points back for strengths that are documented. 305 stocks are scored so far. No stock has reached 100.</p>
 </header>
 
 <div class="prose">
@@ -36,6 +36,7 @@
     <div><h3>3 · Cracks <span class="neg num">max −35</span></h3><p>What sits behind the headline numbers: cash flow, customer concentration and behaviour, execution, governance, debt, insider trading, guidance and macro exposure.</p></div>
     <div><h3>Plus <span class="pos num">max +15</span></h3><p>Only documented strengths, such as insider buying, raised guidance, net cash or a widely spread customer base.</p></div>
   </div>
+  <p>Data rules for the three steps (since model 1.3): forward multiples are compared with forward history and trailing with trailing. Free cash flow is measured after lease payments and capitalised development, and cash excludes customer prepayments. One-off gains and losses are removed from the earnings a multiple is based on. Spin-offs and mergers are judged on the company's own pro forma figures for 12 months. Buybacks and dividends only count as a strength when free cash flow covers them; for banks and insurers net profit is used instead.</p>
 
   <h2>Three data-driven adjustments</h2>
   <p>Since model 1.2 three adjustments are added from market data that is refreshed every week. The final score is held between 1 and 100.</p>
@@ -47,7 +48,8 @@
     <tr><td>Below 0.5</td><td class="pos">+8</td></tr><tr><td>0.5–0.75</td><td class="pos">+6</td></tr><tr><td>0.75–1</td><td class="pos">+3</td></tr>
     <tr><td>1–1.5</td><td>±0</td></tr><tr><td>1.5–2</td><td class="neg">−4</td></tr><tr><td>2–3</td><td class="neg">−8</td></tr><tr><td>Above 3</td><td class="neg">−12</td></tr><tr><td>Not available</td><td class="neg">−6</td></tr>
   </tbody></table>
-  <p>Guards: positive PEG points are removed for loss-making companies, when the trailing P/E is more than twice the forward P/E (earnings expected to bounce), and for cyclical companies at a peak.</p>
+  <p>When the data source shows no PEG for a profitable company (common for small caps, banks and insurers), Vanta calculates it from the P/E ratios: forward P/E divided by the expected earnings growth, where growth is the trailing P/E over the forward P/E, minus 1. Because reported and adjusted earnings make that estimate noisy, a calculated PEG gives between −6 (the same as a missing PEG) and +3 points. If that growth is zero or negative, the PEG counts as not available. <em>(Since model 1.3.)</em></p>
+  <p>Guards: positive PEG points are removed for loss-making companies, when the trailing P/E is more than twice the forward P/E (earnings expected to bounce), and for cyclical companies at a peak. Positive PEG points are capped at +3 when the price is 20% or more below its 200-day average, because earnings estimates tend to lag a sharp fall.</p>
 
   <h3>Upside points (−10 to +10)</h3>
   <p>Upside is the median analyst price target divided by the price, minus 1. The median is used instead of the average, so one extreme target cannot move it.</p>
@@ -59,7 +61,7 @@
   <ul>
     <li>halved when fewer than 10 analysts cover the stock</li>
     <li>halved again when the targets are widely spread (high minus low is more than the median)</li>
-    <li>capped at +4 when the stock has fallen 25% or more in a year, because targets tend to lag a fall</li>
+    <li>capped at +4 when the stock has fallen 25% or more in a year, or when the price is 20% or more below its 200-day average (a recent fall that a one-year number can miss), because targets tend to lag a fall</li>
     <li>set to 0 when the price is more than 30 days old.</li>
   </ul>
 
@@ -75,13 +77,13 @@
   <p>A score is a starting point for your own research, not a buy or sell signal. The model is evaluated every month against how the stocks actually performed, and changes are logged as new versions.</p>
 
   <h2>Data and updates</h2>
-  <p>Prices, analyst targets, PEG, P/E and 52-week changes come from stockanalysis.com and are refreshed every Saturday. Findings are researched per company and link to their sources. Each company page shows the date of its price.</p>
+  <p>Prices, analyst targets, PEG, P/E, 52-week changes and 200-day averages come from stockanalysis.com and are refreshed every Saturday. Findings are researched per company and link to their sources. Each company page shows the date of its price.</p>
 </div>
 
 <footer>
   <p class="big">Not investment advice. Vanta is an analysis framework that scores companies; it does not tell anyone what to buy or sell.</p>
-  <p>Prices, analyst targets, PEG and P/E: stockanalysis.com. Findings link to their sources. Scores: the Vanta model 1.2. Logos are trademarks of their owners; Vanta is not affiliated with any company shown.</p>
-  <p class="num">Model 1.2 · prices 25 Sep 2026 – 29 Sep 2026 · site built 29 Sep 2026 · <a href="https://www.instagram.com/vanta.analyst/" rel="noopener">@vanta.analyst</a></p>
+  <p>Prices, analyst targets, PEG and P/E: stockanalysis.com. Findings link to their sources. Scores: the Vanta model 1.3. Logos are trademarks of their owners; Vanta is not affiliated with any company shown.</p>
+  <p class="num">Model 1.3 · prices 25 Sep 2026 – 1 Oct 2026 · site built 1 Oct 2026 · <a href="https://www.instagram.com/vanta.analyst/" rel="noopener">@vanta.analyst</a></p>
 </footer>
 </div>
 </body>
