@@ -358,3 +358,30 @@ footer p{max-width:72ch}
 footer .big{color:var(--body);font-size:14px}
 
 [hidden]{display:none !important}
+
+/* intro: animated logo on the first page view of a session (html.intro is set by an inline script in <head>) */
+.intro-ov{display:none}
+html.intro body{overflow:hidden}
+html.intro .intro-ov{display:grid;place-items:center;position:fixed;inset:0;z-index:100;cursor:pointer;
+  background:radial-gradient(60vmax 60vmax at 50% 45%,rgba(210,176,110,.10),rgba(14,14,14,0) 60%),#0E0E0E}
+.intro-in{display:flex;flex-direction:column;align-items:center;gap:22px}
+.intro-mark{width:min(40vw,196px);height:auto;overflow:visible;filter:drop-shadow(0 10px 28px rgba(0,0,0,.6))}
+.intro-mark .ip{opacity:0}
+html.intro .intro-mark .pl{animation:ivArmL .75s cubic-bezier(.16,.84,.3,1) .05s forwards}
+html.intro .intro-mark .pr{animation:ivArmR .75s cubic-bezier(.16,.84,.3,1) .05s forwards}
+html.intro .intro-mark .pc{animation:ivDrop .5s cubic-bezier(.2,.9,.3,1.25) .55s forwards}
+html.intro .intro-mark .pa{animation:ivDrop .5s cubic-bezier(.2,.9,.3,1.25) .72s forwards}
+.intro-mark .shine{transform:translateX(-300px) skewX(-18deg);opacity:0}
+html.intro .intro-mark .shine{animation:ivShine .75s cubic-bezier(.45,0,.25,1) 1.05s forwards}
+.intro-word{font-family:var(--serif);font-size:16px;letter-spacing:1.1em;margin-right:-1.1em;color:#D8BB80;opacity:0}
+html.intro .intro-word{animation:ivWord .8s cubic-bezier(.2,.7,.2,1) .95s forwards}
+html.intro-out .intro-ov{animation:ivOut .5s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}
+html.intro-out .intro-in{animation:ivAway .5s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes ivArmL{from{opacity:0;transform:translate(-170px,-130px)}to{opacity:1;transform:none}}
+@keyframes ivArmR{from{opacity:0;transform:translate(170px,-130px)}to{opacity:1;transform:none}}
+@keyframes ivDrop{from{opacity:0;transform:translateY(-120px)}to{opacity:1;transform:none}}
+@keyframes ivShine{0%{opacity:1;transform:translateX(-300px) skewX(-18deg)}100%{opacity:1;transform:translateX(760px) skewX(-18deg)}}
+@keyframes ivWord{from{opacity:0;letter-spacing:1.1em;margin-right:-1.1em}to{opacity:1;letter-spacing:.55em;margin-right:-.55em}}
+@keyframes ivOut{to{opacity:0;visibility:hidden}}
+@keyframes ivAway{to{transform:scale(1.06) translateY(-6px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.intro-ov{display:none !important}html.intro body{overflow:auto}}
