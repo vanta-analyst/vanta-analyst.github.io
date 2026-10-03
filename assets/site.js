@@ -170,7 +170,7 @@
       const step = now => { const p = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - p, 3); big.textContent = Math.round(100 - (100 - target) * e); if (p < 1) requestAnimationFrame(step); };
       big.textContent = '100'; requestAnimationFrame(step);
     };
-    if (document.documentElement.classList.contains('intro')) setTimeout(run, 2300); else run();
+    if (document.documentElement.classList.contains('intro')) setTimeout(run, 2600); else run();
   }
 
   // waterfall: hover or focus explains a step; clicking a step opens its findings
