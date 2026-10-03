@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2610031650">
+<link rel="stylesheet" href="assets/style.css?v=2610031704">
 </head>
 <body>
 <div class="intro-ov" aria-hidden="true"><div class="intro-in">
@@ -53,6 +53,40 @@ setTimeout(end,2000);['click','keydown','wheel','touchstart'].forEach(function(t
     <div class="pf-tpl" role="group" aria-label="Start from"><span class="mut">Start from</span>
       <button type="button" class="seg-b" data-tpl="top10">Top 10</button><button type="button" class="seg-b" data-tpl="zone">70+ zone</button><button type="button" class="seg-b" data-tpl="nordic">Nordic top 10</button><button type="button" class="seg-b" data-tpl="spread">Best per industry</button><button type="button" class="seg-b" data-tpl="clear">Empty</button>
     </div>
+    <details class="pf-filter" id="pf-filter">
+      <summary><span class="ff-title">Find stocks with filters</span><span class="ff-on mut" id="ff-on"></span></summary>
+      <div class="ff-body">
+        <div class="ff-grid">
+          <label class="ff-f"><span>Industry</span><select id="ff-ind"><option value="">All industries</option><option>Autos &amp; parts</option><option>Chip equipment</option><option>Commodities &amp; uranium</option><option>Construction &amp; materials</option><option>Defence, aerospace &amp; space</option><option>Financial data &amp; insurance broking</option><option>Food, drinks &amp; restaurants</option><option>Grid &amp; electrical equipment</option><option>Health insurance &amp; services</option><option>Machinery &amp; automation</option><option>Oil &amp; gas</option><option>Pharma &amp; medtech</option><option>Semiconductors</option><option>Software, cloud &amp; internet</option><option>Tech hardware &amp; optics</option><option>Transport &amp; logistics</option><option>Utilities &amp; power</option></select></label>
+          <label class="ff-f"><span>Region</span><select id="ff-reg"><option value="">All regions</option><option>Nordics</option><option>Rest of Europe</option><option>North America</option><option>Asia-Pacific</option></select></label>
+          <label class="ff-f"><span>Country</span><select id="ff-ctry"><option value="">All countries</option><option>Australia</option><option>Belgium</option><option>Canada</option><option>Denmark</option><option>Finland</option><option>France</option><option>Germany</option><option>Italy</option><option>Japan</option><option>Netherlands</option><option>Norway</option><option>South Korea</option><option>Spain</option><option>Sweden</option><option>United Kingdom</option><option>United States</option></select></label>
+          <label class="ff-f"><span>Currency</span><select id="ff-cur"><option value="">All currencies</option><option>AUD</option><option>CAD</option><option>DKK</option><option>EUR</option><option>GBP</option><option>JPY</option><option>KRW</option><option>NOK</option><option>SEK</option><option>USD</option></select></label>
+          <label class="ff-f"><span>Analyst upside</span><select id="ff-up"><option value="">Any</option><option value="0">Above 0%</option><option value="0.1">Above 10%</option><option value="0.2">Above 20%</option><option value="0.4">Above 40%</option></select></label>
+          <label class="ff-f"><span>Forward P/E</span><select id="ff-pe"><option value="">Any</option><option value="10">10 or lower</option><option value="15">15 or lower</option><option value="20">20 or lower</option><option value="30">30 or lower</option></select></label>
+          <label class="ff-f"><span>PEG</span><select id="ff-peg"><option value="">Any</option><option value="1">1.0 or lower</option><option value="1.5">1.5 or lower</option><option value="2">2.0 or lower</option></select></label>
+          <label class="ff-f"><span>Last 52 weeks</span><select id="ff-chg"><option value="">Any</option><option value="down20">Fell more than 20%</option><option value="down">Fell</option><option value="up">Rose</option><option value="up20">Rose more than 20%</option></select></label>
+          <label class="ff-f"><span>Analyst coverage</span><select id="ff-an"><option value="">Any</option><option value="1">At least 1</option><option value="5">5 or more</option><option value="10">10 or more</option><option value="20">20 or more</option></select></label>
+          <label class="ff-f"><span>Penny stocks</span><select id="ff-penny"><option value="">Include</option><option value="hide">Leave out</option><option value="only">Only penny stocks</option></select></label>
+        </div>
+        <div class="ff-score">
+          <span class="ff-lbl">Vanta score <b class="num" id="ff-sv">1–100</b></span>
+          <div class="ff-dual"><span class="ff-fill" id="ff-fill"></span><input type="range" id="ff-smin" min="1" max="100" step="1" value="1" aria-label="Lowest Vanta score"><input type="range" id="ff-smax" min="1" max="100" step="1" value="100" aria-label="Highest Vanta score"></div>
+        </div>
+        <div class="ff-flags" role="group" aria-label="Score profile">
+          <button type="button" class="seg-b" data-flag="biz" aria-pressed="false" title="Business deduction of 5 points or less">Strong business</button>
+          <button type="button" class="seg-b" data-flag="price" aria-pressed="false" title="Price deduction of 5 points or less">Fair price</button>
+          <button type="button" class="seg-b" data-flag="cracks" aria-pressed="false" title="Cracks deduction of 5 points or less">Few cracks</button>
+          <button type="button" class="seg-b" data-flag="plus" aria-pressed="false" title="At least 5 points back for documented strengths">Documented strengths</button>
+          <button type="button" class="seg-b" data-flag="zone" aria-pressed="false" title="Score above 70 and more than 20% upside">70+ zone</button>
+        </div>
+        <div class="ff-head">
+          <p class="num" id="ff-count" aria-live="polite"></p>
+          <label class="ff-sortl"><span class="sr">Sort matches</span><select id="ff-sort"><option value="score">Sort: score</option><option value="up">Sort: upside</option><option value="pe">Sort: forward P/E (low first)</option><option value="chg">Sort: 52 weeks (weakest first)</option><option value="name">Sort: A–Z</option></select></label>
+        </div>
+        <ol class="ff-list" id="ff-list" aria-label="Matching stocks"></ol>
+        <div class="ff-actions"><button type="button" class="linkbtn" id="ff-more" hidden>Show more</button><span class="ff-right"><button type="button" class="linkbtn" id="ff-reset">Reset filters</button><button type="button" class="btn" id="ff-addall">Add all</button></span></div>
+      </div>
+    </details>
     <div class="pf-empty" id="pf-empty"><p>Search for a company above, pick a starting point, or press <b>Add to portfolio</b> on any stock page.</p></div>
     <ol class="pf-list" id="pf-list" aria-label="Holdings"></ol>
     <div class="pf-tools">
@@ -87,9 +121,9 @@ setTimeout(end,2000);['click','keydown','wheel','touchstart'].forEach(function(t
   <nav class="footnav" aria-label="Site"><a href="index.html">Overview</a><a href="rankings.html">Rankings</a><a href="penny.html">Penny stocks</a><a href="portfolio.html">Portfolio builder</a><a href="method.html">Method</a></nav>
 </footer>
 </div>
-<script src="assets/index.js?v=2610031650" defer></script>
-<script src="assets/site.js?v=2610031650" defer></script>
-<script src="assets/pdata.js?v=2610031650" defer></script>
-<script src="assets/portfolio.js?v=2610031650" defer></script>
+<script src="assets/index.js?v=2610031704" defer></script>
+<script src="assets/site.js?v=2610031704" defer></script>
+<script src="assets/pdata.js?v=2610031704" defer></script>
+<script src="assets/portfolio.js?v=2610031704" defer></script>
 </body>
 </html>

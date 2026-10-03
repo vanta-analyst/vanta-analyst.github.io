@@ -4,13 +4,13 @@
   const root = document.getElementById('pf'); if (!root) return;
   const IDX = window.VANTA_INDEX || [], P = window.VANTA_P || [];
   // IDX row: [name, slug, score, industry, country, penny, upside, zone]
-  // P row (same order): [t1, t2, t3, plus, pegPts, upPts, revPts, fpe, chg52, currency, logo, darkTile]
+  // P row (same order): [t1, t2, t3, plus, pegPts, upPts, revPts, fpe, chg52, currency, logo, darkTile, peg, analysts]
   const S = new Map();
   IDX.forEach((r, i) => {
     const p = P[i] || [];
     S.set(r[1], { name: r[0], slug: r[1], score: r[2], ind: r[3], ctry: r[4], penny: !!r[5], up: r[6], zone: !!r[7],
       t1: p[0] || 0, t2: p[1] || 0, t3: p[2] || 0, plus: p[3] || 0, adj: (p[4] || 0) + (p[5] || 0) + (p[6] || 0),
-      fpe: p[7], chg: p[8], cur: p[9] || '', logo: p[10] || '', dark: !!p[11] });
+      fpe: p[7], chg: p[8], cur: p[9] || '', logo: p[10] || '', dark: !!p[11], peg: p[12], an: p[13] || 0 });
   });
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -23,7 +23,7 @@
   const allAvg = IDX.reduce((a, r) => a + r[2], 0) / (IDX.length || 1);
 
   // ---------- state ----------
-  let st = { cap: 100000, h: [] }, fromLink = false;
+  let st = { cap: 100000, h: [] }, fromLink = false, screen = null;
   const valid = h => h.filter(x => S.has(x.slug)).slice(0, MAX).map(x => ({ slug: x.slug, w: Math.max(0, Math.min(100, Math.round(+x.w || 0))) }));
   function readHash() {
     const m = location.hash.match(/p=([^&]+)/); if (!m) return null;
@@ -191,6 +191,7 @@
     }
     $('pf-checks').innerHTML = C.map(c => `<li class="${c[0]}">${esc(c[1])}</li>`).join('');
     $('pf-share').disabled = $('pf-csv').disabled = !has;
+    if (screen) screen.mark();
   }
 
   // ---------- share and export ----------
@@ -207,6 +208,119 @@
     const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'vanta-fictional-portfolio.csv' });
     document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   });
+
+  // ---------- find stocks with filters, then add one or all ----------
+  const FF = $('pf-filter');
+  if (FF) {
+    const FKEY = 'vanta-portfolio-filters', PAGE = 25;
+    const NA = ['United States', 'Canada'], APAC = ['Japan', 'Australia', 'South Korea'];
+    const region = c => NORDIC.includes(c) ? 'Nordics' : NA.includes(c) ? 'North America' : APAC.includes(c) ? 'Asia-Pacific' : 'Rest of Europe';
+    const normCur = c => (c === 'GBX' || c === 'GBp') ? 'GBP' : String(c || '').toUpperCase();
+    const ctl = { ind: $('ff-ind'), reg: $('ff-reg'), ctry: $('ff-ctry'), cur: $('ff-cur'), up: $('ff-up'), pe: $('ff-pe'), peg: $('ff-peg'), chg: $('ff-chg'), an: $('ff-an'), penny: $('ff-penny'), smin: $('ff-smin'), smax: $('ff-smax'), sort: $('ff-sort') };
+    const flags = [...FF.querySelectorAll('[data-flag]')];
+    const out = $('ff-list'), cnt = $('ff-count'), more = $('ff-more'), addAll = $('ff-addall'), onTxt = $('ff-on');
+    const ALL = IDX.map(r => S.get(r[1]));
+    let lim = PAGE, matches = [];
+    try {
+      const s = JSON.parse(localStorage.getItem(FKEY) || 'null');
+      if (s) {
+        for (const k in ctl) if (s[k] !== undefined && ctl[k]) ctl[k].value = s[k];
+        flags.forEach(b => b.setAttribute('aria-pressed', String((s.flags || []).includes(b.dataset.flag))));
+        FF.open = !!s.open;
+      }
+    } catch (e) { /* storage off */ }
+    const on = f => flags.some(b => b.dataset.flag === f && b.getAttribute('aria-pressed') === 'true');
+    function pass(s) {
+      const v = k => ctl[k].value;
+      if (v('ind') && s.ind !== v('ind')) return false;
+      if (v('reg') && region(s.ctry) !== v('reg')) return false;
+      if (v('ctry') && s.ctry !== v('ctry')) return false;
+      if (v('cur') && normCur(s.cur) !== v('cur')) return false;
+      if (s.score < +v('smin') || s.score > +v('smax')) return false;
+      if (v('up') !== '' && !(s.up !== null && s.up !== undefined && s.up > +v('up'))) return false;
+      if (v('pe') !== '' && !(s.fpe > 0 && s.fpe <= +v('pe'))) return false;
+      if (v('peg') !== '' && !(s.peg > 0 && s.peg <= +v('peg'))) return false;
+      const c = v('chg');
+      if (c) {
+        if (s.chg === null || s.chg === undefined) return false;
+        if ((c === 'down20' && s.chg > -0.2) || (c === 'down' && s.chg >= 0) || (c === 'up' && s.chg <= 0) || (c === 'up20' && s.chg < 0.2)) return false;
+      }
+      if (v('an') !== '' && s.an < +v('an')) return false;
+      if ((v('penny') === 'hide' && s.penny) || (v('penny') === 'only' && !s.penny)) return false;
+      if (on('biz') && s.t1 > 5) return false;
+      if (on('price') && s.t2 > 5) return false;
+      if (on('cracks') && s.t3 > 5) return false;
+      if (on('plus') && s.plus < 5) return false;
+      if (on('zone') && !s.zone) return false;
+      return true;
+    }
+    const nl = x => (x === null || x === undefined) ? null : x;
+    const sorters = {
+      score: (a, b) => b.score - a.score || a.name.localeCompare(b.name),
+      up: (a, b) => (nl(b.up) ?? -9) - (nl(a.up) ?? -9),
+      pe: (a, b) => (a.fpe > 0 ? a.fpe : 1e9) - (b.fpe > 0 ? b.fpe : 1e9),
+      chg: (a, b) => (nl(a.chg) ?? 9) - (nl(b.chg) ?? 9),
+      name: (a, b) => a.name.localeCompare(b.name)
+    };
+    const activeCount = () => Object.keys(ctl).filter(k => !['smin', 'smax', 'sort'].includes(k) && ctl[k].value !== '').length
+      + (+ctl.smin.value > 1 || +ctl.smax.value < 100 ? 1 : 0) + flags.filter(b => b.getAttribute('aria-pressed') === 'true').length;
+    function keep() {
+      const s = { flags: flags.filter(b => b.getAttribute('aria-pressed') === 'true').map(b => b.dataset.flag), open: FF.open };
+      for (const k in ctl) s[k] = ctl[k].value;
+      try { localStorage.setItem(FKEY, JSON.stringify(s)); } catch (e) { /* storage off */ }
+    }
+    function scoreUi() {
+      let a = +ctl.smin.value, b = +ctl.smax.value;
+      if (a > b) { [a, b] = [b, a]; ctl.smin.value = a; ctl.smax.value = b; }
+      $('ff-sv').textContent = `${a}–${b}`;
+      const f = $('ff-fill'); f.style.left = (a - 1) / 99 * 100 + '%'; f.style.right = (100 - (b - 1) / 99 * 100) + '%';
+    }
+    function run(resetLim) {
+      if (resetLim) lim = PAGE;
+      scoreUi();
+      matches = ALL.filter(pass).sort(sorters[ctl.sort.value] || sorters.score);
+      const n = activeCount();
+      onTxt.textContent = n ? `${n} filter${n === 1 ? '' : 's'} on · ${matches.length} match${matches.length === 1 ? '' : 'es'}` : '';
+      cnt.textContent = `${matches.length} of ${IDX.length} stocks match`;
+      out.innerHTML = matches.slice(0, lim).map(s => {
+        const bits = [s.ind, s.ctry];
+        if (s.fpe > 0) bits.push(`fwd P/E ${s.fpe.toFixed(1)}`);
+        if (s.up !== null && s.up !== undefined) bits.push(`${spct(s.up, 0)} upside`);
+        return `<li data-slug="${s.slug}">${logo(s)}<span class="ff-who"><a href="stocks/${s.slug}.html">${esc(s.name)}</a><small>${bits.map(esc).join(' · ')}</small></span><span class="sb ${band(s.score)} num">${s.score}</span><button type="button" class="ff-add btn" aria-label="Add ${esc(s.name)}">Add</button></li>`;
+      }).join('') || '<li class="ff-none">No stock passes all these filters. Loosen one of them.</li>';
+      more.hidden = matches.length <= lim;
+      more.textContent = `Show ${Math.min(PAGE, matches.length - lim)} more`;
+      mark(); keep();
+    }
+    function mark() {
+      const have = new Set(st.h.map(x => x.slug));
+      out.querySelectorAll('li[data-slug]').forEach(li => {
+        const b = li.querySelector('.ff-add'), yes = have.has(li.dataset.slug);
+        b.textContent = yes ? 'Added' : 'Add'; b.disabled = yes; li.classList.toggle('in', yes);
+      });
+      const free = MAX - st.h.length, left = matches.filter(s => !have.has(s.slug)).length, k = Math.min(free, left);
+      addAll.disabled = k <= 0;
+      addAll.textContent = left === 0 ? 'All added' : free <= 0 ? `Portfolio full (${MAX})` : `Add ${k === left ? 'all ' : 'the first '}${k}`;
+    }
+    out.addEventListener('click', e => { const b = e.target.closest('.ff-add'); if (b) add(b.closest('li').dataset.slug); });
+    addAll.addEventListener('click', () => {
+      const have = new Set(st.h.map(x => x.slug)), pick = matches.filter(s => !have.has(s.slug)).slice(0, MAX - st.h.length);
+      if (!pick.length) return;
+      if (pick.length > 15 && !confirm(`Add ${pick.length} stocks to the portfolio?`)) return;
+      pick.forEach(s => st.h.push({ slug: s.slug, w: 50 }));
+      renderRows(); update(); say(`${pick.length} stocks added.`);
+    });
+    more.addEventListener('click', () => { lim += PAGE; run(false); });
+    $('ff-reset').addEventListener('click', () => {
+      for (const k in ctl) ctl[k].value = k === 'smin' ? 1 : k === 'smax' ? 100 : k === 'sort' ? 'score' : '';
+      flags.forEach(b => b.setAttribute('aria-pressed', 'false')); run(true);
+    });
+    Object.keys(ctl).forEach(k => ctl[k].addEventListener(ctl[k].type === 'range' ? 'input' : 'change', () => run(true)));
+    flags.forEach(b => b.addEventListener('click', () => { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); run(true); }));
+    FF.addEventListener('toggle', keep);
+    screen = { mark };
+    run(true);
+  }
 
   renderRows(); update();
   if (fromLink) {
