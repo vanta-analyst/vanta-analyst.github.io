@@ -39,17 +39,24 @@
     if (!keepLimit) limit = PAGE;
     const q = $('q').value.trim().toLowerCase(), ind = $('ind').value, ctry = $('country').value, sort = $('sort').value;
     const sorted = [...items].sort(sorters[sort] || sorters.score);
-    let shown = 0, matched = 0;
+    let shown = 0, matched = 0; const picks = [];
     sorted.forEach(li => {
       const ok = (!q || li.dataset.name.toLowerCase().includes(q) || li.dataset.ind.toLowerCase().includes(q) || li.dataset.country.toLowerCase().includes(q))
         && (!ind || li.dataset.ind === ind) && (!ctry || li.dataset.country === ctry) && bands[band](li);
-      if (ok) matched++;
+      if (ok) { matched++; if (picks.length < 25) picks.push(li); }
       const vis = ok && shown < limit; if (vis) shown++;
       li.hidden = !vis; ol.append(li);
     });
     if (!matched) ol.append(empty); else empty.remove();
     $('count').textContent = matched === total ? `${total} companies` : `${matched} of ${total} companies`;
     const reset = $('reset'); if (reset) reset.hidden = !(q || ind || ctry || band !== 'all' || sort !== 'score');
+    // hand the first matches (in the current order) to the portfolio builder
+    const tp = $('toport');
+    if (tp) {
+     tp.hidden = !picks.length;
+      tp.textContent = `Build a portfolio from the first ${picks.length}`;
+      tp.href = 'portfolio.html#p=' + picks.map(li => li.dataset.slug + '~50').join('.');
+    }
     if (more) { more.hidden = matched <= shown; more.textContent = `Show ${Math.min(PAGE, matched - shown)} more`; }
     const u = new URLSearchParams();
     if (q) u.set('q', q); if (ind) u.set('ind', ind); if (ctry) u.set('country', ctry);

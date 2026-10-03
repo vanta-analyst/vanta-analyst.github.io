@@ -222,6 +222,29 @@
     pairs.forEach(p => io.observe(p.s));
   }
 
+  // stock page: add to / remove from the fictional portfolio (same storage as portfolio.js)
+  const addb = document.querySelector('.addp');
+  if (addb) {
+    const KEY = 'vanta-portfolio', msg = document.querySelector('.addp-msg'), slug = addb.dataset.slug;
+    const read = () => { try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); return s && Array.isArray(s.h) ? s : { cap: 100000, h: [] }; } catch (e) { return null; } };
+    if (read()) {
+      const paint = () => {
+        const s = read(), yes = s.h.some(x => x.slug === slug);
+        addb.textContent = yes ? 'Remove from portfolio' : 'Add to portfolio';
+        addb.classList.toggle('primary', !yes);
+        msg.innerHTML = s.h.length ? `<a href="../portfolio.html">Portfolio builder · ${s.h.length} holding${s.h.length === 1 ? '' : 's'}</a>` : '';
+      };
+      addb.hidden = false; paint();
+      addb.addEventListener('click', () => {
+        const s = read(), i = s.h.findIndex(x => x.slug === slug);
+        if (i >= 0) s.h.splice(i, 1); else if (s.h.length < 40) s.h.push({ slug, w: 50 });
+        try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* storage blocked */ }
+        paint();
+      });
+      addEventListener('storage', e => { if (e.key === KEY) paint(); });
+    }
+  }
+
   // findings: open / close all groups
   document.querySelectorAll('[data-toggle-all]').forEach(b => {
     const groups = [...document.querySelectorAll(b.dataset.toggleAll)];
