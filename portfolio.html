@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>try{if(!sessionStorage.getItem('vanta-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')}catch(e){}</script>
 <title>Fictional portfolio builder &#183; Vanta</title>
-<meta name="description" content="Build a fictional portfolio from 353 Vanta-scored stocks and see its weighted score, analyst upside, industry, country and currency mix. Runs in your browser. Not investment advice.">
+<meta name="description" content="Build a fictional portfolio from 597 Vanta-scored stocks and see its weighted score, analyst upside, industry, country and currency mix. Runs in your browser. Not investment advice.">
 <meta property="og:title" content="Fictional portfolio builder &#183; Vanta">
-<meta property="og:description" content="Build a fictional portfolio from 353 Vanta-scored stocks and see its weighted score, analyst upside, industry, country and currency mix. Runs in your browser. Not investment advice.">
+<meta property="og:description" content="Build a fictional portfolio from 597 Vanta-scored stocks and see its weighted score, analyst upside, industry, country and currency mix. Runs in your browser. Not investment advice.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vanta Stock Scores">
 <link rel="canonical" href="https://vanta-analyst.github.io/portfolio.html">
@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2610031704">
+<link rel="stylesheet" href="assets/style.css?v=2610041152">
 </head>
 <body>
 <div class="intro-ov" aria-hidden="true"><div class="intro-in">
@@ -35,7 +35,7 @@ var done=false;function end(){if(done)return;done=true;d.classList.add('intro-ou
 setTimeout(end,2000);['click','keydown','wheel','touchstart'].forEach(function(t){addEventListener(t,end,{once:true,passive:true})})})()</script>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar"><nav aria-label="Main"><a class="word" href="index.html" aria-label="Vanta home"><svg class="mark" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M26 92 L60 122 L84 106 L124 200 L206 62" fill="none" stroke="#FFFFFF" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/><circle cx="210" cy="56" r="21" fill="#FFFFFF"/></svg><span>Vanta</span></a><span class="links"><a href="index.html">Overview</a><a href="rankings.html">Rankings</a><a href="penny.html">Penny <span class="wide">stocks</span></a><a href="portfolio.html" aria-current="page">Portfolio</a><a href="method.html">Method</a><a class="ig" href="https://www.instagram.com/vanta.analyst/" rel="noopener">Instagram</a></span>
-<div class="gs " id="gs-top" data-rel=""><button class="gs-btn" type="button" aria-label="Search stocks"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="gs-box"><input type="search" placeholder="Search 353 stocks…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="gs-top-res" aria-label="Search stocks by name"><ul class="gs-res" id="gs-top-res" role="listbox" hidden></ul></div></div></nav></header>
+<div class="gs " id="gs-top" data-rel=""><button class="gs-btn" type="button" aria-label="Search stocks"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="gs-box"><input type="search" placeholder="Search 597 stocks…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="gs-top-res" aria-label="Search stocks by name"><ul class="gs-res" id="gs-top-res" role="listbox" hidden></ul></div></div></nav></header>
 <div class="wrap">
 <main id="main">
 <header class="hero">
@@ -48,7 +48,7 @@ setTimeout(end,2000);['click','keydown','wheel','touchstart'].forEach(function(t
     <div class="sechead"><div><h2 id="pfb-h">Holdings</h2><p id="pf-count" class="num">No holdings yet</p></div></div>
     <div class="pf-add">
       <label class="sr" for="pf-q">Add a stock</label>
-      <div class="gs-box"><input id="pf-q" type="search" placeholder="Add a stock – search 353 names…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pf-res"><ul class="gs-res" id="pf-res" role="listbox" hidden></ul></div>
+      <div class="gs-box"><input id="pf-q" type="search" placeholder="Add a stock – search 597 names…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="pf-res"><ul class="gs-res" id="pf-res" role="listbox" hidden></ul></div>
     </div>
     <div class="pf-tpl" role="group" aria-label="Start from"><span class="mut">Start from</span>
       <button type="button" class="seg-b" data-tpl="top10">Top 10</button><button type="button" class="seg-b" data-tpl="zone">70+ zone</button><button type="button" class="seg-b" data-tpl="nordic">Nordic top 10</button><button type="button" class="seg-b" data-tpl="spread">Best per industry</button><button type="button" class="seg-b" data-tpl="clear">Empty</button>
@@ -59,8 +59,8 @@ setTimeout(end,2000);['click','keydown','wheel','touchstart'].forEach(function(t
         <div class="ff-grid">
           <label class="ff-f"><span>Industry</span><select id="ff-ind"><option value="">All industries</option><option>Autos &amp; parts</option><option>Chip equipment</option><option>Commodities &amp; uranium</option><option>Construction &amp; materials</option><option>Defence, aerospace &amp; space</option><option>Financial data &amp; insurance broking</option><option>Food, drinks &amp; restaurants</option><option>Grid &amp; electrical equipment</option><option>Health insurance &amp; services</option><option>Machinery &amp; automation</option><option>Oil &amp; gas</option><option>Pharma &amp; medtech</option><option>Semiconductors</option><option>Software, cloud &amp; internet</option><option>Tech hardware &amp; optics</option><option>Transport &amp; logistics</option><option>Utilities &amp; power</option></select></label>
           <label class="ff-f"><span>Region</span><select id="ff-reg"><option value="">All regions</option><option>Nordics</option><option>Rest of Europe</option><option>North America</option><option>Asia-Pacific</option></select></label>
-          <label class="ff-f"><span>Country</span><select id="ff-ctry"><option value="">All countries</option><option>Australia</option><option>Belgium</option><option>Canada</option><option>Denmark</option><option>Finland</option><option>France</option><option>Germany</option><option>Italy</option><option>Japan</option><option>Netherlands</option><option>Norway</option><option>South Korea</option><option>Spain</option><option>Sweden</option><option>United Kingdom</option><option>United States</option></select></label>
-          <label class="ff-f"><span>Currency</span><select id="ff-cur"><option value="">All currencies</option><option>AUD</option><option>CAD</option><option>DKK</option><option>EUR</option><option>GBP</option><option>JPY</option><option>KRW</option><option>NOK</option><option>SEK</option><option>USD</option></select></label>
+          <label class="ff-f"><span>Country</span><select id="ff-ctry"><option value="">All countries</option><option>Australia</option><option>Belgium</option><option>Canada</option><option>Denmark</option><option>Finland</option><option>France</option><option>Germany</option><option>Italy</option><option>Japan</option><option>Netherlands</option><option>Norway</option><option>Other</option><option>Poland</option><option>South Korea</option><option>Spain</option><option>Sweden</option><option>Switzerland</option><option>United Kingdom</option><option>United States</option></select></label>
+          <label class="ff-f"><span>Currency</span><select id="ff-cur"><option value="">All currencies</option><option>AUD</option><option>CAD</option><option>CHF</option><option>DKK</option><option>EUR</option><option>GBP</option><option>JPY</option><option>KRW</option><option>NOK</option><option>PLN</option><option>SEK</option><option>USD</option></select></label>
           <label class="ff-f"><span>Analyst upside</span><select id="ff-up"><option value="">Any</option><option value="0">Above 0%</option><option value="0.1">Above 10%</option><option value="0.2">Above 20%</option><option value="0.4">Above 40%</option></select></label>
           <label class="ff-f"><span>Forward P/E</span><select id="ff-pe"><option value="">Any</option><option value="10">10 or lower</option><option value="15">15 or lower</option><option value="20">20 or lower</option><option value="30">30 or lower</option></select></label>
           <label class="ff-f"><span>PEG</span><select id="ff-peg"><option value="">Any</option><option value="1">1.0 or lower</option><option value="1.5">1.5 or lower</option><option value="2">2.0 or lower</option></select></label>
@@ -121,9 +121,9 @@ setTimeout(end,2000);['click','keydown','wheel','touchstart'].forEach(function(t
   <nav class="footnav" aria-label="Site"><a href="index.html">Overview</a><a href="rankings.html">Rankings</a><a href="penny.html">Penny stocks</a><a href="portfolio.html">Portfolio builder</a><a href="method.html">Method</a></nav>
 </footer>
 </div>
-<script src="assets/index.js?v=2610031704" defer></script>
-<script src="assets/site.js?v=2610031704" defer></script>
-<script src="assets/pdata.js?v=2610031704" defer></script>
-<script src="assets/portfolio.js?v=2610031704" defer></script>
+<script src="assets/index.js?v=2610041152" defer></script>
+<script src="assets/site.js?v=2610041152" defer></script>
+<script src="assets/pdata.js?v=2610041152" defer></script>
+<script src="assets/portfolio.js?v=2610041152" defer></script>
 </body>
 </html>
