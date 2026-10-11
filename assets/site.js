@@ -253,3 +253,45 @@
     groups.forEach(g => g.addEventListener('toggle', sync)); sync();
   });
 })();
+
+// Holding-period view: re-weights the same points for a chosen horizon. At 3 years it equals the Vanta score.
+window.VantaH = (function () {
+  const KEY = 'vanta-horizon', NEUTRAL = 3;
+  const clampH = h => Math.min(10, Math.max(1, Math.round(h)));
+  const get = () => { try { const v = parseInt(localStorage.getItem(KEY), 10); return v >= 1 && v <= 10 ? v : NEUTRAL; } catch (e) { return NEUTRAL; } };
+  const set = h => { try { localStorage.setItem(KEY, String(clampH(h))); } catch (e) { /* storage blocked */ } };
+  // x runs from -1 (1 year) through 0 (3 years) to 1 (10 years)
+  const weights = h => {
+    const x = h <= NEUTRAL ? (h - NEUTRAL) / 2 : (h - NEUTRAL) / 7, s = x < 0;
+    return { biz: 1 + (s ? 0.25 : 0.4) * x, price: 1 - (s ? 0.25 : 0.4) * x, near: 1 - (s ? 0.4 : 0.75) * x };
+  };
+  // c = [t1, t2, t3, plus, pegPts, upPts, revPts]; t1–t3 are deductions given as positive numbers
+  const score = (c, h) => {
+    const w = weights(h);
+    const v = 100 - w.biz * c[0] - w.price * c[1] - c[2] + c[3] + c[4] + w.near * (c[5] + c[6]);
+    return Math.max(1, Math.min(100, Math.round(v)));
+  };
+  const band = v => v >= 70 ? 'hi' : v >= 50 ? 'mid' : 'lo';
+  const label = h => h === 1 ? '1 year' : h + ' years';
+  return { get, set, weights, score, band, label, clampH, NEUTRAL };
+})();
+
+// stock page: the holding-period panel
+(function () {
+  const box = document.querySelector('.hz[data-c]'); if (!box || !window.VantaH) return;
+  const H = window.VantaH, c = box.dataset.c.split(',').map(Number), base = +box.dataset.score;
+  const r = box.querySelector('input[type=range]'), out = box.querySelector('.hz-out'), note = box.querySelector('.hz-note');
+  const paint = h => {
+    const v = H.score(c, h);
+    r.value = h; r.setAttribute('aria-valuetext', H.label(h));
+    out.innerHTML = `<span class="sb ${H.band(v)} num">${v}</span><span class="hz-at">at ${H.label(h)}</span>`;
+    const d = v - base;
+    note.textContent = h === H.NEUTRAL
+      ? `At 3 years the view equals the Vanta score (${base}).`
+      : `${d === 0 ? 'Same as' : (d > 0 ? d + ' above' : -d + ' below')} the Vanta score of ${base}. ` +
+        (h > H.NEUTRAL ? 'A longer hold puts more weight on the business and less on today\u2019s price and 12-month analyst signals.'
+                       : 'A shorter hold puts more weight on today\u2019s price and 12-month analyst signals, and less on the business.');
+  };
+  box.hidden = false; paint(H.get());
+  r.addEventListener('input', () => { const h = H.clampH(+r.value); H.set(h); paint(h); });
+})();
