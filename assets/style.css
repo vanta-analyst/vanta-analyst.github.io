@@ -776,3 +776,43 @@ html.intro-out .intro-in{animation:ivAway .5s cubic-bezier(.4,0,.2,1) forwards}
 .hz input[type=range]::-moz-range-thumb,.hz-row input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:var(--beige)}
 .hz input[type=range]:focus-visible,.hz-row input[type=range]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 @media (pointer:coarse){.hz input[type=range],.hz-row input[type=range]{height:44px}}
+/* ---------- HIG polish (Oct 2026): calmer labels, clearer hierarchy, tidier mobile ---------- */
+/* small-caps labels: less tracking, a touch larger, so they read as labels rather than decoration */
+.lhead,.ihead,.ptab th,.glance h3,.pf-lbl,.pf-h,.tb-h,table.scale th,.flist .c,.ff-f span,.ff-lbl{font-size:11.5px;letter-spacing:.07em;font-weight:600}
+.sechead p,.sub{font-size:15px;line-height:1.55}
+.stockhead .id{gap:14px}
+.meta{font-size:13.5px;color:var(--lichen)}
+/* waterfall steps readable at a glance */
+.wf-bar.neg{background:rgba(201,139,112,.72)}
+.wf-bar.pos{background:rgba(169,201,143,.72)}
+.wf-bar.start{background:#3E5146}
+
+/* penny list: fits its column on desktop, the catalyst gets room */
+.ptab .ctry{white-space:normal}
+.ptab .co{min-width:210px}
+.ptab td{padding:12px 8px}
+.ptab .next{min-width:220px;line-height:1.45}
+.ptab .next small{margin-bottom:2px}
+/* catalyst calendar: long dates wrap instead of widening the page */
+.cal li{grid-template-columns:minmax(96px,150px) minmax(0,1fr)}
+.cal .d{white-space:normal;overflow-wrap:anywhere}
+
+@media (max-width:640px){
+  .wrap{gap:56px}.wrap.narrow{gap:48px}
+  header.hero{padding-top:28px}
+  .hero.center{padding-top:44px}
+  /* rankings: filters sit on the page, not in a dark box */
+  .filters{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;padding-bottom:0}
+  /* penny list: one row per company, the catalyst underneath, no sideways scrolling */
+  .tablewrap{overflow:visible;margin:0}
+  table.ptab,.ptab thead,.ptab tbody{display:block}
+  .ptab tr{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;column-gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+  .ptab thead tr{border-top:0;padding:0 0 8px}
+  .ptab th,.ptab td{border-top:0;padding:0}
+  .ptab th:last-child{grid-column:1/-1;padding-top:4px}
+  .ptab td.next{grid-column:1/-1;min-width:0;padding-top:8px}
+  .ptab .co{min-width:0}.ptab .co>span:last-child{min-width:0}.ptab .ctry{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ptab tr:hover td{background:none}
+  .asym{gap:2px}.asym i{width:4px;height:12px}.asym b{font-size:18px;margin-left:6px}
+  .cal li{grid-template-columns:1fr;gap:2px}
+}
